@@ -1,7 +1,6 @@
 {
     "name": "sb/yii2-prettydumper",
     "description": "Dump any PHP types and objects to browser or console",
-    //"type": "library",
     "type": "yii2-extension",
     "keywords": ["debug","vardump","dump"],
     "license": "LGPL",
