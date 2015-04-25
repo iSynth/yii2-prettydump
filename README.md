@@ -13,6 +13,8 @@ Either run
 php composer.phar require --prefer-dist sb/yii2-prettydumper "*"
 ```
 
+or add
+
 ```
 "sb/yii2-prettydumper": "*"
 ```
