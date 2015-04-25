@@ -1,0 +1,23 @@
+{
+    "name": "sb/yii2-prettydumper",
+    "description": "Dump any PHP types and objects to browser or console",
+    //"type": "library",
+    "type": "yii2-extension",
+    "keywords": ["debug","vardump","dump"],
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "Synthetic Brain",
+            "email": "synthetic@nm.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "sb\\prettydumper\\": ""
+          }
+    },
+    "require": {
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-composer": "*"
+    }
+}
