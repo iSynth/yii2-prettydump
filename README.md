@@ -28,7 +28,7 @@ to the require section of your `composer.json` file.
 Usage example with simple controller
 ------------------------------------
 
-```
+```php
 <?php
 
     namespace frontend\controllers;
