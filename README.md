@@ -1,3 +1,7 @@
+[![Packagist Version](https://img.shields.io/packagist/v/sb/yii2-prettydumper.svg?style=flat-square)](https://packagist.org/packages/sb/yii2-prettydumper)
+[![Total Downloads](https://img.shields.io/packagist/dt/sb/yii2-prettydumper.svg?style=flat-square)](https://packagist.org/packages/sb/yii2-prettydumper)
+
+
 Yii2 pretty var dumper
 ================
 Dump any PHP types and objects to browser or console.
