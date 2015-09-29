@@ -36,7 +36,6 @@
                 $output .= '</span>';
                 $output .= "<span id=\"dump_array_open_$id\"$open>";
                 $output .= '<span'.Dumper::getStyle('cursor:pointer;'.Dumper::$style_array).' onclick="'.sprintf(self::$onclick, $id, $id).'">array['.count($arg).']</span>'."\n";
-                //$tab++;
                 $output .= str_repeat(self::$tab, $tab)."(\n";
                 $tab++;
                 foreach ($arg as $key => $value) $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_array).'>[<span'.Dumper::getStyle(Dumper::$style_key).'>'.$key.'</span>]</span> => '.Dumper::varDumpExtend($value, $tab)."";

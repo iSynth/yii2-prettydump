@@ -1,7 +1,3 @@
-[![Packagist Version](https://img.shields.io/packagist/v/sb/yii2-prettydumper.svg?style=flat-square)](https://packagist.org/packages/sb/yii2-prettydumper)
-[![Total Downloads](https://img.shields.io/packagist/dt/sb/yii2-prettydumper.svg?style=flat-square)](https://packagist.org/packages/sb/yii2-prettydumper)
-
-
 Yii2 pretty var dumper
 ================
 Dump any PHP types and objects to browser or console.
@@ -17,8 +13,6 @@ Either run
 php composer.phar require --prefer-dist sb/yii2-prettydumper "*"
 ```
 
-or add
-
 ```
 "sb/yii2-prettydumper": "*"
 ```
@@ -28,7 +22,7 @@ to the require section of your `composer.json` file.
 Usage example with simple controller
 ------------------------------------
 
-```php
+```
 <?php
 
     namespace frontend\controllers;

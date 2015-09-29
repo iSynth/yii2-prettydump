@@ -55,25 +55,55 @@
                 $output .= '</span>';
                 $output .= "<span id=\"dump_object_open_$id\"$open>";
                 $output .= '<span'.Dumper::getStyle('cursor:pointer;'.Dumper::$style_object).' onclick="'.sprintf(self::$onclick, $id, $id).'">object['.$cparam.' '.get_class($arg).']</span>'.$extends_out.$interfaces_out."\n";
-                //$tab++;
                 $output .= str_repeat(self::$tab, $tab)."(\n";
                 $tab++;
-                $properties = $class->getProperties();
-                foreach ($properties as $prop)
+
+
+                $constants = $class->getConstants();
+                if ( !empty($constants))
                 {
-                    $pparam = $prop->isPublic() ? 'public ' : '';
-                    $pparam .= $prop->isPrivate() ? 'private ' : '';
-                    $pparam .= $prop->isProtected() ? 'protected ' : '';
-                    $pparam .= $prop->isStatic() ? 'static ' : '';
-                    if ($prop->isPublic())
+                    $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_key) .'>CONSTANTS</span></br>';
+                    foreach ($constants as $constName => $constValue)
                     {
-                        $value = $prop->getValue($arg);
-                        $error = false;
+                        $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'.
+                        'constant '. $constName.'</span> -> '.Dumper::varDumpExtend($constValue, $tab);
                     }
-                    else $error = true;
-                    if (!$error) $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'.$pparam.'property '.$prop->getName().'</span> -> '.Dumper::varDumpExtend($value, $tab);
-                    else $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'.$pparam.'property '.$prop->getName()."</span> -> WARNING! value is hidden\n";
+                    $output .= '</br>';
                 }
+
+                $properties = $class->getProperties();
+                if (! empty($properties))
+                {
+                    $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_key) .'>PROPERTIES</span></br>';
+                    foreach ($properties as $prop)
+                    {
+                        $pparam = $prop->isPublic() ? 'public ' : '';
+                        $pparam .= $prop->isPrivate() ? 'private ' : '';
+                        $pparam .= $prop->isProtected() ? 'protected ' : '';
+                        $pparam .= $prop->isStatic() ? 'static ' : '';
+                        if ($prop->isPublic())
+                        {
+                            $value = $prop->getValue($arg);
+                            $error = false;
+                        }
+                        else if ($prop->isPrivate())
+                        {
+                            $prop->setAccessible(true);
+                            $value = $prop->getValue($arg);
+                            $prop->setAccessible(false);
+                            $error = false;
+                        }
+                        else $error = true;
+
+                        if (!$error) $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).
+                            '>'.$pparam.'property '.$prop->getName().'</span> -> '.Dumper::varDumpExtend($value, $tab);
+                        else $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'
+                            .$pparam.'property '.$prop->getName()."</span> -> WARNING! value is hidden\n";
+
+                    }
+                    $output .= '</br>';
+                }
+
                 if (count($extends) > 0)
                 {
                     foreach ($extends as $ename)
@@ -87,7 +117,9 @@
                                 $epparam = $eprop->isStatic() ? 'static ' : '';
                                 try
                                 {
+                                    $eprop->setAccessible(true);
                                     $evalue = $eprop->getValue($arg);
+                                    $eprop->setAccessible(false);
                                 }
                                 catch (Exception $e)
                                 {
@@ -98,32 +130,41 @@
                         }
                     }
                 }
+
                 $metods = $class->getMethods();
-                foreach ($metods as $method)
+                if (! empty($metods))
                 {
-                    $mparam = $method->isAbstract() ? 'abstract ' : '';
-                    $mparam .= $method->isFinal() ? 'final ' : '';
-                    $mparam .= $method->isPublic() ? 'public ' : '';
-                    $mparam .= $method->isPrivate() ? 'private ' : '';
-                    $mparam .= $method->isProtected() ? 'protected ' : '';
-                    $mparam .= $method->isStatic() ? 'static ' : '';
-                    $mparam .= $method->isConstructor() ? 'constructor' : 'method';
-                    $param_out = '';
-                    $opion = 0;
-                    foreach ($method->getParameters() as $i => $param)
+                    $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_key) .'>METHODS</span></br>';
+                    foreach ($metods as $method)
                     {
-                        $pr = $param->getClass();
-                        if ($param->isOptional())
+                        $mparam = $method->isAbstract() ? 'abstract ' : '';
+                        $mparam .= $method->isFinal() ? 'final ' : '';
+                        $mparam .= $method->isPublic() ? 'public ' : '';
+                        $mparam .= $method->isPrivate() ? 'private ' : '';
+                        $mparam .= $method->isProtected() ? 'protected ' : '';
+                        $mparam .= $method->isStatic() ? 'static ' : '';
+                        $mparam .= $method->isConstructor() ? '<span'.Dumper::getStyle(Dumper::$style_key)
+                        .'>constructor</span>' : ($method->getName() == '__destruct' ? '<span'.Dumper::getStyle
+                        (Dumper::$style_key) .'>destructor</span>' : 'method');
+
+                        $param_out = '';
+                        $opion = 0;
+                        foreach ($method->getParameters() as $i => $param)
                         {
-                            $param_out .= '[';
-                            $opion++;
+                            $pr = $param->getClass();
+                            if ($param->isOptional())
+                            {
+                                $param_out .= '[';
+                                $opion++;
+                            }
+                            $param_out .= (is_object($pr) ? $pr->getName().' ' : '').'$'.$param->getName().', ';
                         }
-                        $param_out .= (is_object($pr) ? $pr->getName().' ' : '').'$'.$param->getName().', ';
+                        $param_out = substr($param_out, 0, -2);
+                        $param_out .= str_repeat(']', $opion);
+                        $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'.$mparam.' '.$method->getName().'('.$param_out . ')</span>'."\n";
                     }
-                    $param_out = substr($param_out, 0, -2);
-                    $param_out .= str_repeat(']', $opion);
-                    $output .= str_repeat(self::$tab, $tab).'<span'.Dumper::getStyle(Dumper::$style_object).'>'.$mparam.' '.$method->getName().'('.$param_out . ')</span>'."\n";
                 }
+
                 $tab--;
                 $output .= str_repeat(self::$tab, $tab).")\n";
                 $tab--;
