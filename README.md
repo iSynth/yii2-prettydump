@@ -13,11 +13,8 @@ Either run
 php composer.phar require --prefer-dist sb/yii2-prettydumper "*"
 ```
 
-```
-"sb/yii2-prettydumper": "*"
-```
+This will install code to 'vendor/sb/yii2-prettydumper' folder.
 
-to the require section of your `composer.json` file.
 
 Usage example with simple controller
 ------------------------------------
