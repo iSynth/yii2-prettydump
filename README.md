@@ -19,7 +19,7 @@ This will install code to 'vendor/sb/yii2-prettydumper' folder.
 Usage example with simple controller
 ------------------------------------
 
-```
+```php
 <?php
 
     namespace frontend\controllers;
