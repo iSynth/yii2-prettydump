@@ -5,7 +5,7 @@
     class DumperArray implements DumperPlugin
     {
         public static $collapse_level = 6;
-        public static $max_level = 20;
+        public static $max_level = 3;
         public static $tab = '  ';
         private static $onclick = "var s1=document.getElementById('dump_array_close_%s').style; var s2=document.getElementById('dump_array_open_%s').style; s1.display=s1.display=='none'?'inline':'none'; s2.display=s2.display=='none'?'inline':'none';";
 
